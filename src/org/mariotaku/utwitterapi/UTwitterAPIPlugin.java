@@ -134,6 +134,10 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage, IXp
 				XC_MethodReplacement.returnConstant(new AllowAllHostnameVerifierImpl()));
 	}
 
+	private static void hookSSLSocketFactory(final Class<?> cls) {
+		if (cls == null || !javax.net.ssl.SSLSocketFactory.class.isAssignableFrom(cls)) return;
+	}
+
 	private static void hookURL() {
 		hookAllMethods(URL.class, "openConnection", new URLConnectionModifyRequestCallback());
 	}
@@ -222,7 +226,7 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage, IXp
 				if (Utils.isDebugBuild()) {
 					Log.d(LOGTAG, String.format("Found SSLSocketFactory implemention %s", result));
 				}
-				hookApacheSSLSocketFactory(cls);
+				hookSSLSocketFactory(cls);
 			} else if (URLStreamHandlerFactory.class.isAssignableFrom(cls)) {
 				if (Utils.isDebugBuild()) {
 					Log.d(LOGTAG, String.format("Found URLStreamHandlerFactory implemention %s", result));
