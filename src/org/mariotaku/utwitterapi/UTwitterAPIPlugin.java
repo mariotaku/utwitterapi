@@ -40,7 +40,7 @@ import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
-public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage, IXposedHookZygoteInit {
+public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
 
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
@@ -55,15 +55,6 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage, IXp
 		changeT4JFixURL(lpparam);
 		changeT4JAPIAddress(lpparam);
 		// twitterHack(lpparam);
-	}
-
-	@Override
-	public void initZygote(final StartupParam startupParam) throws Throwable {
-		// final Method loadClassMethod =
-		// XposedHelpers.findMethodBestMatch(ClassLoader.getSystemClassLoader().getClass(),
-		// "loadClass", String.class);
-		// hookMethod(loadClassMethod, new
-		// HookLoadClassCallback());
 	}
 
 	private void changeT4JAPIAddress(final LoadPackageParam lpparam) {
@@ -117,7 +108,12 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage, IXp
 	private static void hookHttpClient(final Class<?> cls) {
 		if (cls == null || !HttpClient.class.isAssignableFrom(cls)) return;
 		final HttpClientModifyRequestCallback requestCallback = new HttpClientModifyRequestCallback();
-		hookAllMethods(cls, "execute", requestCallback);
+		for (Method method : cls.getMethods()) {
+			if ("execute".equals(method.getName())) {
+				hookMethod(method, requestCallback);
+			}
+		}
+//		hookAllMethods(cls, "execute", requestCallback);
 	}
 
 	private static void hookHttpsURLConnection(final Class<?> cls) {

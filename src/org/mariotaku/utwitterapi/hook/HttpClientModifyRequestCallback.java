@@ -15,6 +15,7 @@ import org.mariotaku.utwitterapi.util.Utils;
 
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
 import de.robv.android.xposed.XposedBridge;
@@ -78,7 +79,10 @@ public final class HttpClientModifyRequestCallback extends XC_MethodReplacement 
 		if (indexOfHttpUriRequest != -1) {
 			final HttpUriRequest req = (HttpUriRequest) args[indexOfHttpUriRequest];
 			final URI uri = req.getURI();
-			if (HOST_TWITTER_API.equals(uri.getAuthority())) {
+			if (HOST_TWITTER_API.equals(uri.getHost())) {
+				if (Utils.isDebugBuild()) {
+					Log.d(LOGTAG, String.format("Modifying HTTP request for %s", uri));
+				}
 				if (req instanceof HttpRequestBase) {
 					modifyAbstractHttpMessage((HttpRequestBase) req);
 				} else {
@@ -109,6 +113,9 @@ public final class HttpClientModifyRequestCallback extends XC_MethodReplacement 
 			final HttpHost host = (HttpHost) args[indexOfHttpHost];
 			final HttpRequest req = (HttpRequest) args[indexOfHttpRequest];
 			if (HOST_TWITTER_API.equals(host.getHostName())) {
+				if (Utils.isDebugBuild()) {
+					Log.d(LOGTAG, String.format("Modifying HTTP request for %s %s", host, req));
+				}
 				final XSharedPreferences prefs = new XSharedPreferences(PACKAGE_NAME,
 						SHARED_PREFERENCE_NAME_PREFERENCES);
 				final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
