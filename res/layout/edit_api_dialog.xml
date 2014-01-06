@@ -8,6 +8,7 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:paddingBottom="@dimen/element_spacing_small"
 		android:singleLine="true"
 		android:text="@string/api_address"
 		android:textAppearance="?android:attr/textAppearanceSmall"/>
@@ -22,6 +23,8 @@
 	<TextView
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
+		android:paddingBottom="@dimen/element_spacing_small"
+		android:paddingTop="@dimen/element_spacing_small"
 		android:singleLine="true"
 		android:text="@string/ip_address"
 		android:textAppearance="?android:attr/textAppearanceSmall"/>
@@ -32,5 +35,15 @@
 		android:layout_height="wrap_content"
 		android:inputType="textUri"
 		android:singleLine="true"/>
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="@dimen/element_spacing_small"
+		android:singleLine="false"
+		android:text="@string/set_api_notice"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="@android:color/holo_red_light"
+		android:textStyle="bold"/>
 
 </LinearLayout>

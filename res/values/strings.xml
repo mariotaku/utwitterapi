@@ -3,13 +3,13 @@
 
 	<string name="app_name">Universal Twitter API</string>
 	<string name="app_description">Use API Proxy with ANY Twitter clients!</string>
-	<string name="action_settings">Settings</string>
-	<string name="hello_world">Hello world!</string>
 	<string name="set_api">Set API</string>
 	<string name="api_address">API address</string>
 	<string name="ip_address">IP address</string>
 	<string name="add_app">Add app</string>
 	<string name="select_app">Select app</string>
+	<string name="select_apps">Select apps</string>
 	<string name="delete">Delete</string>
+	<string name="set_api_notice">For Twitter login, you may still need to use Proxy or VPN, because this plugin can\'t modify browser\'s request.</string>
 
 </resources>

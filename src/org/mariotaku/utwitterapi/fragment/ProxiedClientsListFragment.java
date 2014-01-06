@@ -71,6 +71,7 @@ public class ProxiedClientsListFragment extends ListFragment implements Constant
 
 	@Override
 	public boolean onCreateActionMode(final ActionMode mode, final Menu menu) {
+		mode.setTitle(R.string.select_apps);
 		new MenuInflater(getActivity()).inflate(R.menu.action_multiselect, menu);
 		return true;
 	}

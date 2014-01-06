@@ -1,5 +1,6 @@
 <resources>
 
+	<dimen name="element_spacing_small">4dp</dimen>
 	<dimen name="element_spacing_default">8dp</dimen>
 
 </resources>

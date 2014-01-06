@@ -34,7 +34,6 @@ import org.mariotaku.utwitterapi.util.Utils;
 
 import android.util.Log;
 import de.robv.android.xposed.IXposedHookLoadPackage;
-import de.robv.android.xposed.IXposedHookZygoteInit;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
@@ -108,12 +107,12 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
 	private static void hookHttpClient(final Class<?> cls) {
 		if (cls == null || !HttpClient.class.isAssignableFrom(cls)) return;
 		final HttpClientModifyRequestCallback requestCallback = new HttpClientModifyRequestCallback();
-		for (Method method : cls.getMethods()) {
+		for (final Method method : cls.getMethods()) {
 			if ("execute".equals(method.getName())) {
 				hookMethod(method, requestCallback);
 			}
 		}
-//		hookAllMethods(cls, "execute", requestCallback);
+		// hookAllMethods(cls, "execute", requestCallback);
 	}
 
 	private static void hookHttpsURLConnection(final Class<?> cls) {

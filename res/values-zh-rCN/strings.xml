@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+	<string name="app_name">Universal Twitter API</string>
+	<string name="app_description">在任何Twitter客户端上使用API！</string>
+	<string name="set_api">设置API</string>
+	<string name="api_address">API地址</string>
+	<string name="ip_address">IP地址</string>
+	<string name="add_app">添加应用</string>
+	<string name="select_app">选择应用</string>
+	<string name="select_apps">选择应用</string>
+	<string name="delete">删除</string>
+	<string name="set_api_notice">Twitter登陆时，你可能仍然需要代理或者VPN，因为这个插件不能修改浏览器的请求。</string>
+
+</resources>

@@ -3,12 +3,12 @@
 	<item
 		android:id="@id/add_app"
 		android:icon="@android:drawable/ic_menu_add"
-		android:showAsAction="always|withText"
+		android:showAsAction="ifRoom|withText"
 		android:title="@string/add_app"/>
 	<item
 		android:id="@id/set_api"
 		android:icon="@android:drawable/ic_menu_edit"
-		android:showAsAction="always|withText"
+		android:showAsAction="ifRoom|withText"
 		android:title="@string/set_api"/>
 
 </menu>
