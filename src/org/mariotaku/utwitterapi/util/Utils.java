@@ -1,13 +1,20 @@
 package org.mariotaku.utwitterapi.util;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.regex.Pattern;
 
 import org.mariotaku.utwitterapi.BuildConfig;
 import org.mariotaku.utwitterapi.Constants;
 
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Parcelable;
 import android.text.TextUtils;
-import de.robv.android.xposed.XSharedPreferences;
 
 public class Utils implements Constants {
 
@@ -25,9 +32,25 @@ public class Utils implements Constants {
 		return false;
 	}
 
-	public static String getCustomAPIHostHeader(final String origUriString) {
-		if (!isTwitterAPI(origUriString) || !isUsingCustomAPI()) return null;
-		final XSharedPreferences prefs = new XSharedPreferences(PACKAGE_NAME, SHARED_PREFERENCE_NAME_PREFERENCES);
+	public static Intent createExcludingChooserIntent(final Context context, final String packageNameToExclude,
+			final Intent intent) {
+		final ArrayList<Intent> intents = new ArrayList<Intent>();
+		final List<ResolveInfo> resInfo = context.getPackageManager().queryIntentActivities(intent, 0);
+		if (resInfo.isEmpty()) return null;
+		for (final ResolveInfo info : resInfo) {
+			final Intent viewIntent = new Intent(intent);
+			if (!info.activityInfo.packageName.equalsIgnoreCase(packageNameToExclude)) {
+				viewIntent.setPackage(info.activityInfo.packageName);
+				intents.add(viewIntent);
+			}
+		}
+		final Intent chooserIntent = Intent.createChooser(intents.remove(intents.size() - 1), null);
+		chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intents.toArray(new Parcelable[intents.size()]));
+		return chooserIntent;
+	}
+
+	public static String getCustomAPIHostHeader(final SharedPreferences prefs, final String origUriString) {
+		if (!isTwitterAPI(origUriString) || !isUsingCustomAPI(prefs)) return null;
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
 		final Uri apiUri = Uri.parse(apiAddress);
 		final int port = apiUri.getPort();
@@ -36,8 +59,16 @@ public class Utils implements Constants {
 		return host;
 	}
 
-	public static boolean isCustomAPIHttps() {
-		final XSharedPreferences prefs = new XSharedPreferences(PACKAGE_NAME, SHARED_PREFERENCE_NAME_PREFERENCES);
+	public static boolean hasXposedFramework(final Context context) {
+		final PackageManager pm = context.getPackageManager();
+		try {
+			return pm.getApplicationInfo("de.robv.android.xposed.installer", 0) != null;
+		} catch (final PackageManager.NameNotFoundException e) {
+			return false;
+		}
+	}
+
+	public static boolean isCustomAPIHttps(final SharedPreferences prefs) {
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
 		if (TextUtils.isEmpty(apiAddress)) return false;
 		final Uri apiUri = Uri.parse(apiAddress);
@@ -53,18 +84,16 @@ public class Utils implements Constants {
 		return HOST_TWITTER_API.equals(uri.getHost());
 	}
 
-	public static boolean isUsingCustomAPI() {
-		final XSharedPreferences prefs = new XSharedPreferences(PACKAGE_NAME, SHARED_PREFERENCE_NAME_PREFERENCES);
+	public static boolean isUsingCustomAPI(final SharedPreferences prefs) {
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
 		if (TextUtils.isEmpty(apiAddress)) return false;
 		final Uri apiUri = Uri.parse(apiAddress);
 		return apiUri.isAbsolute() && !HOST_TWITTER_API.equals(apiUri.getHost());
 	}
 
-	public static String replaceAPIUri(final String origUriString) {
+	public static String replaceAPIUri(final SharedPreferences prefs, final String origUriString) {
 		final Uri uri = Uri.parse(origUriString);
 		if (!HOST_TWITTER_API.equals(uri.getHost())) return origUriString;
-		final XSharedPreferences prefs = new XSharedPreferences(PACKAGE_NAME, SHARED_PREFERENCE_NAME_PREFERENCES);
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
 		final String ipAddress = prefs.getString(KEY_IP_ADDRESS, null);
 		if (TextUtils.isEmpty(apiAddress)) return origUriString;
@@ -88,4 +117,5 @@ public class Utils implements Constants {
 		final String replacedRequestPath = requestPath.startsWith("/") ? requestPath.substring(1) : requestPath;
 		return replacedApiPath + "/" + replacedRequestPath;
 	}
+
 }

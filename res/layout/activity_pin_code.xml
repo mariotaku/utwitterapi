@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="@dimen/element_spacing_default">
+
+			<TextView
+				android:id="@+id/pin_code"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:gravity="center"
+				android:textIsSelectable="true"
+				android:textSize="@dimen/text_size_pin_code"
+				android:typeface="monospace"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="@dimen/element_spacing_small"
+				android:singleLine="false"
+				android:text="@string/pin_code_notice"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textStyle="bold"/>
+		</LinearLayout>
+	</ScrollView>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.2dp"
+		android:background="#40808080"/>
+
+	<LinearLayout
+		style="?android:buttonBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<Button
+			android:id="@+id/copy"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="@android:string/copy"/>
+
+		<Button
+			android:id="@+id/ok"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="@android:string/ok"/>
+	</LinearLayout>
+
+</LinearLayout>

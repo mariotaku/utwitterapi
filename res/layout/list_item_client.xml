@@ -39,11 +39,4 @@
 			android:textAppearance="?android:attr/textAppearanceSmall"/>
 	</LinearLayout>
 
-	<org.mariotaku.utwitterapi.view.ActivatedCheckBox
-		android:id="@android:id/checkbox"
-		android:layout_width="wrap_content"
-		android:layout_height="wrap_content"
-		android:layout_weight="0"
-		android:visibility="gone"/>
-
 </LinearLayout>

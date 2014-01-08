@@ -2,6 +2,7 @@ package org.mariotaku.utwitterapi.hook;
 
 import org.mariotaku.utwitterapi.Constants;
 import org.mariotaku.utwitterapi.util.Utils;
+import org.mariotaku.utwitterapi.util.XposedPluginUtils;
 
 import android.net.Uri;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -14,9 +15,9 @@ public class Twitter4JForceHttpsCallback extends XC_MethodReplacement implements
 		final Object result = XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
 		if (result instanceof String) {
 			final String resultString = (String) result;
-			if (Utils.isTwitterAPI(resultString) && Utils.isUsingCustomAPI()) {
+			if (Utils.isTwitterAPI(resultString) && XposedPluginUtils.isUsingCustomAPI()) {
 				final Uri.Builder builder = Uri.parse(resultString).buildUpon();
-				builder.scheme(Utils.isCustomAPIHttps() ? "https" : "http");
+				builder.scheme(XposedPluginUtils.isCustomAPIHttps() ? "https" : "http");
 				return builder.build().toString();
 			}
 		}

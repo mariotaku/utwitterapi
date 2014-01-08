@@ -49,7 +49,7 @@ public class ApplicationsListAdapter extends BaseAdapter {
 	@Override
 	public View getView(final int position, final View convertView, final ViewGroup parent) {
 		final View view = convertView != null ? convertView : LayoutInflater.from(mContext).inflate(
-				R.layout.application_list_item, parent, false);
+				R.layout.list_item_client, parent, false);
 		final ViewHolder viewholder = view.getTag() == null ? new ViewHolder(view) : (ViewHolder) view.getTag();
 
 		final ApplicationInfo info = getItem(position);

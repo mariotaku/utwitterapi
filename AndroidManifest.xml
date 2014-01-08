@@ -1,17 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
 	package="org.mariotaku.utwitterapi"
-	android:versionCode="3"
-	android:versionName="1.0.2">
+	android:versionCode="4"
+	android:versionName="1.0.3">
 
 	<uses-sdk
-		android:minSdkVersion="14"
+		android:minSdkVersion="15"
 		android:targetSdkVersion="19"/>
+
+	<uses-permission android:name="android.permission.INTERNET"/>
 
 	<application
 		android:allowBackup="true"
 		android:icon="@drawable/ic_launcher"
-		android:label="@string/app_name">
+		android:label="@string/app_name"
+		android:theme="@style/Theme">
 		<meta-data
 			android:name="xposedmodule"
 			android:value="true"/>
@@ -23,7 +26,7 @@
 			android:value="@string/app_description"/>
 
 		<activity
-			android:name="org.mariotaku.utwitterapi.activity.PluginSettingsActivity"
+			android:name=".activity.PluginSettingsActivity"
 			android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN"/>
@@ -31,6 +34,29 @@
 				<category android:name="android.intent.category.LAUNCHER"/>
 			</intent-filter>
 		</activity>
+		<activity
+			android:name=".activity.BrowserSigninAgentActivity"
+			android:label="@string/emulate_oauth_sign_in"
+			android:theme="@style/Theme.Dialog">
+			<intent-filter android:priority="999">
+				<action android:name="android.intent.action.VIEW"/>
+
+				<category android:name="android.intent.category.DEFAULT"/>
+
+				<data
+					android:host="api.twitter.com"
+					android:path="/oauth/authorize"
+					android:scheme="http"/>
+				<data
+					android:host="api.twitter.com"
+					android:path="/oauth/authorize"
+					android:scheme="https"/>
+			</intent-filter>
+		</activity>
+		<activity
+			android:name=".activity.PinCodeActivity"
+			android:label="@string/pin_code"
+			android:theme="@style/Theme.Dialog"/>
 	</application>
 
 </manifest>

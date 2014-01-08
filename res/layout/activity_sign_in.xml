@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="vertical">
+
+	<ScrollView
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content">
+
+		<LinearLayout
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:orientation="vertical"
+			android:padding="@dimen/element_spacing_default">
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingBottom="@dimen/element_spacing_small"
+				android:singleLine="true"
+				android:text="@string/username"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+			<EditText
+				android:id="@+id/edit_username"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textEmailAddress"
+				android:singleLine="true"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingBottom="@dimen/element_spacing_small"
+				android:paddingTop="@dimen/element_spacing_small"
+				android:singleLine="true"
+				android:text="@string/password"
+				android:textAppearance="?android:attr/textAppearanceSmall"/>
+
+			<EditText
+				android:id="@+id/edit_password"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:inputType="textPassword"
+				android:singleLine="true"/>
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:paddingTop="@dimen/element_spacing_small"
+				android:singleLine="false"
+				android:text="@string/sign_in_notice"
+				android:textAppearance="?android:attr/textAppearanceMedium"
+				android:textColor="@android:color/holo_red_light"
+				android:textStyle="bold"/>
+		</LinearLayout>
+	</ScrollView>
+
+	<View
+		android:layout_width="match_parent"
+		android:layout_height="0.2dp"
+		android:background="#40808080"/>
+
+	<LinearLayout
+		style="?android:buttonBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+
+		<Button
+			android:id="@+id/open_in_browser"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="@string/open_in_browser"/>
+
+		<Button
+			android:id="@+id/sign_in"
+			style="?android:buttonBarButtonStyle"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1"
+			android:gravity="center"
+			android:text="@android:string/ok"/>
+	</LinearLayout>
+
+</LinearLayout>

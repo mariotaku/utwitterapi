@@ -2,5 +2,6 @@
 
 	<dimen name="element_spacing_small">4dp</dimen>
 	<dimen name="element_spacing_default">8dp</dimen>
+	<dimen name="text_size_pin_code">48dp</dimen>
 
 </resources>

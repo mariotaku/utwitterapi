@@ -10,7 +10,7 @@ import javax.net.ssl.SSLSocketFactory;
 import org.mariotaku.utwitterapi.Constants;
 import org.mariotaku.utwitterapi.util.AllowAllHostnameVerifierImpl;
 import org.mariotaku.utwitterapi.util.TrustAllSSLSocketFactory;
-import org.mariotaku.utwitterapi.util.Utils;
+import org.mariotaku.utwitterapi.util.XposedPluginUtils;
 
 import android.text.TextUtils;
 import de.robv.android.xposed.XC_MethodReplacement;
@@ -23,9 +23,9 @@ public class URLConnectionModifyRequestCallback extends XC_MethodReplacement imp
 		final URL url = (URL) param.thisObject;
 		final String origUriString = url.toString();
 		final String host = url.getHost();
-		if (HOST_TWITTER_API.equals(host) && Utils.isUsingCustomAPI()) {
-			final String replacedUriString = Utils.replaceAPIUri(origUriString);
-			final String hostHeaderValue = Utils.getCustomAPIHostHeader(origUriString);
+		if (HOST_TWITTER_API.equals(host) && XposedPluginUtils.isUsingCustomAPI()) {
+			final String replacedUriString = XposedPluginUtils.replaceAPIUri(origUriString);
+			final String hostHeaderValue = XposedPluginUtils.getCustomAPIHostHeader(origUriString);
 			final Object result = XposedBridge.invokeOriginalMethod(param.method, new URL(replacedUriString),
 					param.args);
 			if (result instanceof URLConnection && !TextUtils.isEmpty(hostHeaderValue)) {

@@ -43,9 +43,9 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
 
 	@Override
 	public void handleLoadPackage(final LoadPackageParam lpparam) throws Throwable {
+		final String pname = lpparam.packageName;
 		final XSharedPreferences clientsPreferences = new XSharedPreferences(PACKAGE_NAME,
 				SHARED_PREFERENCE_NAME_CLIENTS);
-		final String pname = lpparam.packageName;
 		if (pname == null || !clientsPreferences.getBoolean(pname, false)) return;
 		Log.d(LOGTAG, String.format("Loading package %s with Twitter API support", pname));
 		hookLoadClass(lpparam);

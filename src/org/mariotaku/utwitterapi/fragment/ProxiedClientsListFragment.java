@@ -120,6 +120,7 @@ public class ProxiedClientsListFragment extends ListFragment implements Constant
 
 	@Override
 	public void onSharedPreferenceChanged(final SharedPreferences sharedPreferences, final String key) {
+		if (getActivity() == null || isDetached()) return;
 		getLoaderManager().restartLoader(0, null, this);
 	}
 

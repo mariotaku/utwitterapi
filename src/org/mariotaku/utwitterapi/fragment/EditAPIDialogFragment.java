@@ -59,7 +59,7 @@ public class EditAPIDialogFragment extends DialogFragment implements Constants, 
 		@SuppressWarnings("deprecation")
 		final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCE_NAME_PREFERENCES,
 				Context.MODE_WORLD_READABLE);
-		final View view = LayoutInflater.from(context).inflate(R.layout.edit_api_dialog, null);
+		final View view = LayoutInflater.from(context).inflate(R.layout.dialog_edit_api, null);
 		mEditAPIAddress = (EditText) view.findViewById(R.id.edit_api_address);
 		mEditIPAddress = (EditText) view.findViewById(R.id.edit_ip_address);
 		mEditAPIAddress.addTextChangedListener(this);

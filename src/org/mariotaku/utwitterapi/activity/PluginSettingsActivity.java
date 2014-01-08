@@ -4,6 +4,8 @@ import org.mariotaku.utwitterapi.R;
 import org.mariotaku.utwitterapi.fragment.AddApplicationDialogFragmnt;
 import org.mariotaku.utwitterapi.fragment.EditAPIDialogFragment;
 import org.mariotaku.utwitterapi.fragment.ProxiedClientsListFragment;
+import org.mariotaku.utwitterapi.fragment.XposedNotAvailableDialogFragment;
+import org.mariotaku.utwitterapi.util.Utils;
 
 import android.app.Activity;
 import android.app.FragmentManager;
@@ -39,6 +41,10 @@ public class PluginSettingsActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		final FragmentManager fm = getFragmentManager();
 		fm.beginTransaction().replace(android.R.id.content, new ProxiedClientsListFragment()).commit();
+		if (!Utils.hasXposedFramework(this)) {
+			final XposedNotAvailableDialogFragment df = new XposedNotAvailableDialogFragment();
+			df.show(getFragmentManager(), "xposed_not_available");
+		}
 	}
 
 }

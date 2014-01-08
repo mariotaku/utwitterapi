@@ -12,6 +12,7 @@ import org.apache.http.client.methods.HttpUriRequest;
 import org.apache.http.impl.client.RequestWrapper;
 import org.mariotaku.utwitterapi.Constants;
 import org.mariotaku.utwitterapi.util.Utils;
+import org.mariotaku.utwitterapi.util.XposedPluginUtils;
 
 import android.net.Uri;
 import android.text.TextUtils;
@@ -62,9 +63,9 @@ public final class HttpClientModifyRequestCallback extends XC_MethodReplacement 
 	private static void modifyAbstractHttpMessage(final HttpRequestBase req) throws URISyntaxException {
 		final URI origURI = req.getURI();
 		final String origUriString = origURI.toString();
-		if (!Utils.isTwitterAPI(origUriString) || !Utils.isUsingCustomAPI()) return;
-		final String replacedUriString = Utils.replaceAPIUri(origUriString);
-		final String hostHeaderValue = Utils.getCustomAPIHostHeader(origUriString);
+		if (!Utils.isTwitterAPI(origUriString) || !XposedPluginUtils.isUsingCustomAPI()) return;
+		final String replacedUriString = XposedPluginUtils.replaceAPIUri(origUriString);
+		final String hostHeaderValue = XposedPluginUtils.getCustomAPIHostHeader(origUriString);
 		req.setURI(new URI(replacedUriString));
 		if (!TextUtils.isEmpty(hostHeaderValue)) {
 			req.setHeader("Host", hostHeaderValue);
