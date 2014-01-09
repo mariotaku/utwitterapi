@@ -22,5 +22,7 @@
 	<string name="pin_code_notice">Long click to select, then paste it into your client to finish login.</string>
 	<string name="pin_code">PIN Code</string>
 	<string name="pin_code_copied">PIN Code copied into clipboard</string>
+	<string name="use_api_to_sign_in">Use API to login</string>
+	<string name="use_api_to_sign_in_notice">If you can\'t login, please disable this option.</string>
 
 </resources>

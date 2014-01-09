@@ -50,16 +50,12 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
 import android.util.Xml;
 
 public class OAuthPasswordAuthenticator implements Constants {
-
-	private static final String QUERY_PARAM_OAUTH_TOKEN = "oauth_token";
 
 	private static final String REFRESH_URL_PREFIX = "url=";
 	private static final String TWITTER_OAUTH_AUTHORIZATION_URL = "https://api.twitter.com/oauth/authorize";
@@ -68,16 +64,14 @@ public class OAuthPasswordAuthenticator implements Constants {
 
 	private final SharedPreferences sharedPrefs;
 
-	@SuppressWarnings("deprecation")
-	@SuppressLint("WorldReadableFiles")
-	public OAuthPasswordAuthenticator(final Context context) {
+	public OAuthPasswordAuthenticator(final SharedPreferences prefs) {
 		final SchemeRegistry registry = new SchemeRegistry();
 		registry.register(new Scheme("http", PlainSocketFactory.getSocketFactory(), 80));
 		registry.register(new Scheme("https", TrustAllApacheSSLSocketFactory.getSocketFactory(), 443));
 		final HttpParams params = new BasicHttpParams();
 		final ThreadSafeClientConnManager cm = new ThreadSafeClientConnManager(params, registry);
 		httpClient = new DefaultHttpClient(cm, params);
-		sharedPrefs = context.getSharedPreferences(SHARED_PREFERENCE_NAME_PREFERENCES, Context.MODE_WORLD_READABLE);
+		sharedPrefs = prefs;
 	}
 
 	public SignInResult getSignInResult(final String origOAuthOrizationUrlString, final String username,

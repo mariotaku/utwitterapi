@@ -2,12 +2,14 @@ package org.mariotaku.utwitterapi.activity;
 
 import java.io.IOException;
 
+import org.mariotaku.utwitterapi.Constants;
 import org.mariotaku.utwitterapi.R;
 import org.mariotaku.utwitterapi.fragment.ProgressDialogFragment;
 import org.mariotaku.utwitterapi.util.OAuthPasswordAuthenticator;
 import org.mariotaku.utwitterapi.util.OAuthPasswordAuthenticator.SignInResult;
 import org.mariotaku.utwitterapi.util.Utils;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.Fragment;
@@ -23,7 +25,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-public class BrowserSigninAgentActivity extends Activity implements OnClickListener, TextWatcher {
+public class BrowserSigninAgentActivity extends Activity implements Constants, OnClickListener, TextWatcher {
 
 	private EditText mEditUsername;
 	private EditText mEditPassword;
@@ -116,10 +118,13 @@ public class BrowserSigninAgentActivity extends Activity implements OnClickListe
 		private final String mUsername;
 		private final String mPassword;
 
+		@SuppressLint("WorldReadableFiles")
+		@SuppressWarnings("deprecation")
 		SignInTask(final BrowserSigninAgentActivity activity, final String oauthOrizationUrlString,
 				final String username, final String password) {
 			mActivity = activity;
-			mAuthenticator = new OAuthPasswordAuthenticator(activity);
+			mAuthenticator = new OAuthPasswordAuthenticator(activity.getSharedPreferences(
+					SHARED_PREFERENCE_NAME_PREFERENCES, MODE_WORLD_READABLE));
 			mOAuthOrizationUrlString = oauthOrizationUrlString;
 			mUsername = username;
 			mPassword = password;

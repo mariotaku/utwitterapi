@@ -6,11 +6,14 @@ import static de.robv.android.xposed.XposedBridge.invokeOriginalMethod;
 import static de.robv.android.xposed.XposedHelpers.findClass;
 import static de.robv.android.xposed.XposedHelpers.findMethodBestMatch;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.lang.reflect.Method;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLStreamHandler;
 import java.net.URLStreamHandlerFactory;
+import java.nio.charset.Charset;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -29,14 +32,20 @@ import org.mariotaku.utwitterapi.hook.Twitter4JFixURLCallback;
 import org.mariotaku.utwitterapi.hook.Twitter4JForceHttpsCallback;
 import org.mariotaku.utwitterapi.hook.URLConnectionModifyRequestCallback;
 import org.mariotaku.utwitterapi.util.AllowAllHostnameVerifierImpl;
+import org.mariotaku.utwitterapi.util.OAuthPasswordAuthenticator;
+import org.mariotaku.utwitterapi.util.OAuthPasswordAuthenticator.SignInResult;
 import org.mariotaku.utwitterapi.util.TrustAllSSLSocketFactory;
 import org.mariotaku.utwitterapi.util.Utils;
 
+import android.net.Uri;
 import android.util.Log;
+import android.webkit.WebResourceResponse;
+import android.webkit.WebViewClient;
 import de.robv.android.xposed.IXposedHookLoadPackage;
 import de.robv.android.xposed.XC_MethodHook;
 import de.robv.android.xposed.XC_MethodReplacement;
 import de.robv.android.xposed.XSharedPreferences;
+import de.robv.android.xposed.XposedBridge;
 import de.robv.android.xposed.callbacks.XC_LoadPackage.LoadPackageParam;
 
 public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
@@ -227,7 +236,78 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
 					Log.d(LOGTAG, String.format("Found URLStreamHandlerFactory implemention %s", result));
 				}
 				hookURLStreamHandlerFactory(cls);
+			} else if (WebViewClient.class.isAssignableFrom(cls)) {
+				final XSharedPreferences prefs = new XSharedPreferences(PACKAGE_NAME,
+						SHARED_PREFERENCE_NAME_PREFERENCES);
+				if (prefs.getBoolean(KEY_USE_API_TO_SIGN_IN, true)) {
+					final WebViewClientInterceptRequestHook interceptRequestHook = new WebViewClientInterceptRequestHook();
+					XposedBridge.hookAllMethods(cls, "shouldInterceptRequest", interceptRequestHook);
+					final WebViewClientOverrideLoadingHook overrideLoadingHook = new WebViewClientOverrideLoadingHook();
+					XposedBridge.hookAllMethods(cls, "shouldOverrideUrlLoading", overrideLoadingHook);
+				}
 			}
+		}
+
+	}
+
+	private static class WebViewClientInterceptRequestHook extends XC_MethodReplacement {
+
+		private final OAuthPasswordAuthenticator authenticator;
+
+		WebViewClientInterceptRequestHook() {
+			authenticator = new OAuthPasswordAuthenticator(new XSharedPreferences(PACKAGE_NAME,
+					SHARED_PREFERENCE_NAME_PREFERENCES));
+		}
+
+		@Override
+		protected Object replaceHookedMethod(final MethodHookParam param) throws Throwable {
+			final String uriString = (String) param.args[1];
+			if (uriString != null) {
+				final Uri uri = Uri.parse(uriString);
+				if (uriString.startsWith(VIRTUAL_URL_GET_CALLBACK)) {
+					final Uri.Builder builder = Uri.parse("https://api.twitter.com/oauth/authorize").buildUpon();
+					final String oauth_token = uri.getQueryParameter(QUERY_PARAM_OAUTH_TOKEN);
+					final String username = uri.getQueryParameter(QUERY_PARAM_USERNAME);
+					final String password = uri.getQueryParameter(QUERY_PARAM_PASSWORD);
+					builder.appendQueryParameter(QUERY_PARAM_OAUTH_TOKEN, oauth_token);
+					final SignInResult signInResult;
+					try {
+						signInResult = authenticator.getSignInResult(builder.build().toString(), username, password);
+					} catch (final IOException e) {
+						final String message = "Can't login, please retry.";
+						final ByteArrayInputStream is = new ByteArrayInputStream(message.getBytes(Charset
+								.defaultCharset()));
+						return new WebResourceResponse("text/plain", "UTF-8", is);
+					}
+					if (signInResult.isCallbackUrl()) {
+						final String html = CALLBACK_HTML.replace("CALLBACK_URL", signInResult.getCallbackUrl());
+						final ByteArrayInputStream is = new ByteArrayInputStream(
+								html.getBytes(Charset.defaultCharset()));
+						return new WebResourceResponse("text/html", "UTF-8", is);
+					}
+				} else {
+					if ("/oauth/authorize".equals(uri.getPath())
+							&& uri.getQueryParameter(QUERY_PARAM_OAUTH_TOKEN) != null) {
+						final String oauth_token = uri.getQueryParameter(QUERY_PARAM_OAUTH_TOKEN);
+						final String html = SIGN_IN_HTML.replace("OAUTH_TOKEN", oauth_token);
+						final ByteArrayInputStream is = new ByteArrayInputStream(
+								html.getBytes(Charset.defaultCharset()));
+						return new WebResourceResponse("text/html", "UTF-8", is);
+					}
+				}
+			}
+			return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
+		}
+
+	}
+
+	private static class WebViewClientOverrideLoadingHook extends XC_MethodReplacement {
+
+		@Override
+		protected Object replaceHookedMethod(final MethodHookParam param) throws Throwable {
+			final String uriString = (String) param.args[1];
+			if (uriString != null && uriString.startsWith(VIRTUAL_URL_GET_CALLBACK)) return Boolean.valueOf(false);
+			return XposedBridge.invokeOriginalMethod(param.method, param.thisObject, param.args);
 		}
 
 	}

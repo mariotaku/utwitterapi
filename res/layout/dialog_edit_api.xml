@@ -36,7 +36,28 @@
 		android:inputType="textUri"
 		android:singleLine="true"/>
 
+	<CheckBox
+		android:id="@+id/use_api_to_sign_in"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingBottom="@dimen/element_spacing_small"
+		android:paddingTop="@dimen/element_spacing_small"
+		android:singleLine="false"
+		android:text="@string/use_api_to_sign_in"/>
+
 	<TextView
+		android:id="@+id/use_api_to_sign_in_notice"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:paddingTop="@dimen/element_spacing_small"
+		android:singleLine="false"
+		android:text="@string/use_api_to_sign_in_notice"
+		android:textAppearance="?android:attr/textAppearanceMedium"
+		android:textColor="@android:color/holo_red_light"
+		android:textStyle="bold"/>
+
+	<TextView
+		android:id="@+id/set_api_notice"
 		android:layout_width="wrap_content"
 		android:layout_height="wrap_content"
 		android:paddingTop="@dimen/element_spacing_small"
