@@ -10,8 +10,16 @@ public class ApplicationsLoader extends AbsApplicationsLoader {
 		super(context);
 	}
 
+	public ApplicationsLoader(final Context context, final CharSequence keyword) {
+		super(context, keyword);
+	}
+
 	public ApplicationsLoader(final Context context, final PackageManager pm) {
 		super(context, pm);
+	}
+
+	public ApplicationsLoader(final Context context, final PackageManager pm, final CharSequence keyword) {
+		super(context, pm, keyword);
 	}
 
 	@Override

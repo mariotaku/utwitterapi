@@ -18,6 +18,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.os.Build;
+import android.text.TextUtils;
 
 public abstract class AbsApplicationsLoader extends AsyncTaskLoader<List<ApplicationInfo>> {
 
@@ -26,20 +27,31 @@ public abstract class AbsApplicationsLoader extends AsyncTaskLoader<List<Applica
 	private final InterestingConfigChanges mLastConfig = new InterestingConfigChanges();
 	private final PackageManager mPackageManager;
 
+	private final CharSequence mKeyword;
+
 	public AbsApplicationsLoader(final Context context) {
-		this(context, context.getPackageManager());
+		this(context, context.getPackageManager(), null);
+	}
+
+	public AbsApplicationsLoader(final Context context, final CharSequence keyword) {
+		this(context, context.getPackageManager(), keyword);
 	}
 
 	public AbsApplicationsLoader(final Context context, final PackageManager pm) {
+		this(context, pm, null);
+	}
+
+	public AbsApplicationsLoader(final Context context, final PackageManager pm, final CharSequence keyword) {
 		super(context);
 		mPackageManager = pm;
+		mKeyword = keyword;
 	}
 
 	@Override
 	public List<ApplicationInfo> loadInBackground() {
 		final List<ApplicationInfo> result = new ArrayList<ApplicationInfo>();
 		for (final ApplicationInfo info : mPackageManager.getInstalledApplications(0)) {
-			if (!isFiltered(info)) {
+			if (!isFiltered(info) && isKeywordMatch(info)) {
 				result.add(info);
 			}
 		}
@@ -95,6 +107,15 @@ public abstract class AbsApplicationsLoader extends AsyncTaskLoader<List<Applica
 	protected void onStopLoading() {
 		// Attempt to cancel the current load task if possible.
 		cancelLoad();
+	}
+
+	private boolean isKeywordMatch(final ApplicationInfo info) {
+		if (TextUtils.isEmpty(mKeyword)) return true;
+		final String keyword = String.valueOf(mKeyword).toLowerCase();
+		final String pname = info.packageName;
+		final CharSequence label = info.loadLabel(mPackageManager);
+		return pname.toLowerCase().contains(keyword) || label != null
+				&& label.toString().toLowerCase().contains(keyword);
 	}
 
 	public static final class ApplicationNameComparator implements Comparator<ApplicationInfo> {

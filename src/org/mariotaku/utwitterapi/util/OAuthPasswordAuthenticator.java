@@ -202,11 +202,18 @@ public class OAuthPasswordAuthenticator implements Constants {
 
 		private static final long serialVersionUID = -1840298989316218380L;
 
+		AuthenticityTokenException() {
+			super("Can't get authenticity token.");
+		}
 	}
 
 	public static final class InvalidOAuthTokenException extends AuthenticationException {
 
 		private static final long serialVersionUID = -8310692454665711004L;
+
+		InvalidOAuthTokenException() {
+			super("Invalid OAuth token.");
+		}
 
 	}
 
@@ -254,6 +261,9 @@ public class OAuthPasswordAuthenticator implements Constants {
 
 		private static final long serialVersionUID = -4880737459768513029L;
 
+		WrongUserPassException() {
+			super("Wrong username/password.");
+		}
 	}
 
 	private static class GetAuthenticityTokenHandler implements ResponseHandler<String> {
@@ -303,7 +313,7 @@ public class OAuthPasswordAuthenticator implements Constants {
 			} catch (final XmlPullParserException e) {
 
 			}
-			return null;
+			throw new WrongUserPassException();
 		}
 
 	}

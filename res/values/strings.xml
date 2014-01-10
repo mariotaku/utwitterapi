@@ -11,7 +11,7 @@
 	<string name="select_apps">Select apps</string>
 	<string name="delete">Delete</string>
 	<string name="set_api_notice">For Twitter login, you may still need to use Proxy or VPN, because this plugin can\'t modify browser\'s request.</string>
-	<string name="xposed_not_available">Xposed not available</string>
+	<string name="xposed_not_available">Xposed framework not available</string>
 	<string name="xposed_not_available_message">Xposed Framework not available, you must install and enable it to use this plugin.</string>
 	<string name="emulate_oauth_sign_in">Emulate OAuth login</string>
 	<string name="username">Username</string>

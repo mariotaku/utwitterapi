@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:padding="@dimen/element_spacing_default">
+
+	<EditText
+		android:id="@+id/edit_search_query"
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:hint="@android:string/search_go"
+		android:inputType="text"
+		android:singleLine="true"/>
+
+	<FrameLayout
+		android:id="@+id/list_content"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<ListView
+			android:id="@android:id/list"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"/>
+
+		<ProgressBar
+			android:id="@android:id/progress"
+			style="?android:progressBarStyleLarge"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"/>
+	</FrameLayout>
+
+</LinearLayout>

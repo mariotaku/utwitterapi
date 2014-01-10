@@ -13,46 +13,74 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.LoaderManager.LoaderCallbacks;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.content.Loader;
 import android.content.SharedPreferences;
 import android.content.pm.ApplicationInfo;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 
-public class AddApplicationDialogFragmnt extends DialogFragment implements Constants, OnClickListener,
-		LoaderCallbacks<List<ApplicationInfo>> {
+public class AddApplicationDialogFragmnt extends DialogFragment implements Constants,
+		LoaderCallbacks<List<ApplicationInfo>>, TextWatcher, OnItemClickListener {
 
 	private ApplicationsListAdapter mAdapter;
+	private ListView mListView;
+	private ProgressBar mProgressBar;
+	private EditText mEditSearchQuery;
 
-	@SuppressLint("WorldReadableFiles")
 	@Override
-	public void onClick(final DialogInterface dialog, final int which) {
-		final Context context = getActivity();
-		@SuppressWarnings("deprecation")
-		final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCE_NAME_CLIENTS,
-				Context.MODE_WORLD_READABLE);
-		final SharedPreferences.Editor editor = prefs.edit();
-		final ApplicationInfo app = mAdapter.getItem(which);
-		editor.putBoolean(app.packageName, true);
-		editor.apply();
-		dismiss();
+	public void afterTextChanged(final Editable s) {
+	}
+
+	@Override
+	public void beforeTextChanged(final CharSequence s, final int start, final int count, final int after) {
+
 	}
 
 	@Override
 	public Dialog onCreateDialog(final Bundle savedInstanceState) {
 		final Context context = getActivity();
+		final View view = LayoutInflater.from(context).inflate(R.layout.dialog_add_app, null);
 		mAdapter = new ApplicationsListAdapter(context);
+		mListView = (ListView) view.findViewById(android.R.id.list);
+		mProgressBar = (ProgressBar) view.findViewById(android.R.id.progress);
+		mEditSearchQuery = (EditText) view.findViewById(R.id.edit_search_query);
+		mListView.setAdapter(mAdapter);
+		mListView.setOnItemClickListener(this);
+		mEditSearchQuery.addTextChangedListener(this);
 		final AlertDialog.Builder builder = new AlertDialog.Builder(context);
 		builder.setTitle(R.string.select_app);
-		builder.setSingleChoiceItems(mAdapter, -1, this);
+		builder.setView(view);
 		getLoaderManager().initLoader(0, null, this);
 		return builder.create();
 	}
 
 	@Override
 	public Loader<List<ApplicationInfo>> onCreateLoader(final int id, final Bundle args) {
-		return new ApplicationsLoader(getActivity());
+		mListView.setVisibility(View.GONE);
+		mProgressBar.setVisibility(View.VISIBLE);
+		return new ApplicationsLoader(getActivity(), mEditSearchQuery.getText());
+	}
+
+	@SuppressLint("WorldReadableFiles")
+	@Override
+	public void onItemClick(final AdapterView<?> view, final View child, final int position, final long id) {
+		final Context context = getActivity();
+		@SuppressWarnings("deprecation")
+		final SharedPreferences prefs = context.getSharedPreferences(SHARED_PREFERENCE_NAME_CLIENTS,
+				Context.MODE_WORLD_READABLE);
+		final SharedPreferences.Editor editor = prefs.edit();
+		final ApplicationInfo app = mAdapter.getItem(position);
+		editor.putBoolean(app.packageName, true);
+		editor.apply();
+		dismiss();
 	}
 
 	@Override
@@ -63,6 +91,13 @@ public class AddApplicationDialogFragmnt extends DialogFragment implements Const
 	@Override
 	public void onLoadFinished(final Loader<List<ApplicationInfo>> loader, final List<ApplicationInfo> data) {
 		mAdapter.setData(data);
+		mListView.setVisibility(View.VISIBLE);
+		mProgressBar.setVisibility(View.GONE);
+	}
+
+	@Override
+	public void onTextChanged(final CharSequence s, final int start, final int before, final int count) {
+		getLoaderManager().restartLoader(0, null, this);
 	}
 
 }

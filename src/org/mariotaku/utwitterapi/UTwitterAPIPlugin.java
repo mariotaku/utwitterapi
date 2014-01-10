@@ -274,7 +274,13 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
 					try {
 						signInResult = authenticator.getSignInResult(builder.build().toString(), username, password);
 					} catch (final IOException e) {
-						final String message = "Can't login, please retry.";
+						final String message = e.getMessage();
+						final ByteArrayInputStream is = new ByteArrayInputStream(message.getBytes(Charset
+								.defaultCharset()));
+						return new WebResourceResponse("text/plain", "UTF-8", is);
+					}
+					if (signInResult == null) {
+						final String message = "Unknown error";
 						final ByteArrayInputStream is = new ByteArrayInputStream(message.getBytes(Charset
 								.defaultCharset()));
 						return new WebResourceResponse("text/plain", "UTF-8", is);

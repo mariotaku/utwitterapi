@@ -11,5 +11,18 @@
 	<string name="select_apps">选择应用</string>
 	<string name="delete">删除</string>
 	<string name="set_api_notice">Twitter登陆时，你可能仍然需要代理或者VPN，因为这个插件不能修改浏览器的请求。</string>
+	<string name="xposed_not_available">Xposed框架不可用</string>
+	<string name="xposed_not_available_message">Xposed框架不可用，你必须安装并启用框架才能使用这个插件。</string>
+	<string name="emulate_oauth_sign_in">模拟OAuth登录</string>
+	<string name="username">用户名</string>
+	<string name="password">密码</string>
+	<string name="sign_in_notice">请确保你使用的API代理足够安全，这个操作将会将你的用户名和密码发送至API代理。</string>
+	<string name="open_in_browser">在浏览器中打开</string>
+	<string name="please_wait">请稍等。</string>
+	<string name="pin_code_notice">长按以选择，然后把它粘贴到你的客户端完成登录。</string>
+	<string name="pin_code">PIN码</string>
+	<string name="pin_code_copied">PIN码已经复制到剪贴板</string>
+	<string name="use_api_to_sign_in">使用API登录</string>
+	<string name="use_api_to_sign_in_notice">如果你不能登录，请禁用此选项。</string>
 
 </resources>
