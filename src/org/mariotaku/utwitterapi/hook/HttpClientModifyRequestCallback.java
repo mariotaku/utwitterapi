@@ -80,7 +80,7 @@ public final class HttpClientModifyRequestCallback extends XC_MethodReplacement 
 		if (indexOfHttpUriRequest != -1) {
 			final HttpUriRequest req = (HttpUriRequest) args[indexOfHttpUriRequest];
 			final URI uri = req.getURI();
-			if (HOST_TWITTER_API.equals(uri.getHost())) {
+			if (Utils.isTwitterAPIHost(uri.getHost())) {
 				if (Utils.isDebugBuild()) {
 					Log.d(LOGTAG, String.format("Modifying HTTP request for %s", uri));
 				}
@@ -113,7 +113,7 @@ public final class HttpClientModifyRequestCallback extends XC_MethodReplacement 
 		} else if (indexOfHttpHost != -1 && indexOfHttpRequest != -1) {
 			final HttpHost host = (HttpHost) args[indexOfHttpHost];
 			final HttpRequest req = (HttpRequest) args[indexOfHttpRequest];
-			if (HOST_TWITTER_API.equals(host.getHostName())) {
+			if (Utils.isTwitterAPIHost(host.getHostName())) {
 				if (Utils.isDebugBuild()) {
 					Log.d(LOGTAG, String.format("Modifying HTTP request for %s %s", host, req));
 				}

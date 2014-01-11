@@ -52,11 +52,11 @@ public class Utils implements Constants {
 	public static String getCustomAPIHostHeader(final SharedPreferences prefs, final String origUriString) {
 		if (!isTwitterAPI(origUriString) || !isUsingCustomAPI(prefs)) return null;
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
-		final Uri apiUri = Uri.parse(apiAddress);
+		final Uri apiUri = Uri.parse(apiAddress), origUri = Uri.parse(origUriString);
 		final int port = apiUri.getPort();
-		final String host = apiUri.getHost();
-		if (port != -1) return String.format("%s:%d", host, port);
-		return host;
+		final String host = apiUri.getHost(), origHost = origUri.getHost();
+		if (port != -1) return String.format("%s:%d", origHost.replace(HOST_TWITTER, host), port);
+		return origHost.replace(HOST_TWITTER, host);
 	}
 
 	public static boolean hasXposedFramework(final Context context) {
@@ -80,20 +80,29 @@ public class Utils implements Constants {
 	}
 
 	public static boolean isTwitterAPI(final String origUriString) {
-		final Uri uri = Uri.parse(origUriString);
-		return HOST_TWITTER_API.equals(uri.getHost());
+		return isTwitterAPI(Uri.parse(origUriString));
+	}
+
+	public static boolean isTwitterAPI(final Uri uri) {
+		final String host = uri.getHost();
+		return isTwitterAPIHost(host);
+	}
+
+	public static boolean isTwitterAPIHost(final String host) {
+		return host.endsWith(HOST_TWITTER);
 	}
 
 	public static boolean isUsingCustomAPI(final SharedPreferences prefs) {
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
 		if (TextUtils.isEmpty(apiAddress)) return false;
 		final Uri apiUri = Uri.parse(apiAddress);
-		return apiUri.isAbsolute() && !HOST_TWITTER_API.equals(apiUri.getHost());
+		return apiUri.isAbsolute() && !isTwitterAPIHost(apiUri.getHost());
 	}
 
 	public static String replaceAPIUri(final SharedPreferences prefs, final String origUriString) {
 		final Uri uri = Uri.parse(origUriString);
-		if (!HOST_TWITTER_API.equals(uri.getHost())) return origUriString;
+		final String host = uri.getHost();
+		if (!isTwitterAPIHost(host)) return origUriString;
 		final String apiAddress = prefs.getString(KEY_API_ADDRESS, null);
 		final String ipAddress = prefs.getString(KEY_IP_ADDRESS, null);
 		if (TextUtils.isEmpty(apiAddress)) return origUriString;
@@ -103,7 +112,8 @@ public class Utils implements Constants {
 		final Uri.Builder builder = uri.buildUpon();
 		builder.scheme(apiUri.getScheme());
 		if (TextUtils.isEmpty(ipAddress)) {
-			builder.authority(apiAuthority);
+			final String origAuthority = uri.getAuthority();
+			builder.authority(origAuthority.replace(HOST_TWITTER, apiAuthority));
 		} else {
 			builder.authority(apiAuthority.replaceFirst(Pattern.quote(apiHost), ipAddress));
 		}
