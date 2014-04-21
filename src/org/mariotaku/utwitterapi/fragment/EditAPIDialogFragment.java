@@ -80,7 +80,7 @@ public class EditAPIDialogFragment extends DialogFragment implements Constants, 
 		mEditAPIAddress.addTextChangedListener(this);
 		mEditIPAddress.addTextChangedListener(this);
 		mUseAPIToSignin.setOnCheckedChangeListener(this);
-		mEditAPIAddress.setText(prefs.getString(KEY_API_ADDRESS, "https://api.twitter.com/"));
+		mEditAPIAddress.setText(prefs.getString(KEY_API_ADDRESS, "https://twitter.com/"));
 		mEditIPAddress.setText(prefs.getString(KEY_IP_ADDRESS, null));
 		mUseAPIToSignin.setChecked(prefs.getBoolean(KEY_USE_API_TO_SIGN_IN, true));
 		updateNotice();

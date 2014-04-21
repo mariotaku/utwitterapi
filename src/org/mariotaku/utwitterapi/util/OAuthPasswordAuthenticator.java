@@ -53,6 +53,7 @@ import org.xmlpull.v1.XmlPullParserFactory;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.text.TextUtils;
+import android.util.Log;
 import android.util.Xml;
 
 public class OAuthPasswordAuthenticator implements Constants {
@@ -88,6 +89,9 @@ public class OAuthPasswordAuthenticator implements Constants {
 			if (hostHeader != null) {
 				getAuthenticityToken.setHeader("Host", hostHeader);
 			}
+			if (Utils.isDebugBuild()) {
+				Log.d(LOGTAG, String.format("Read authenticity token from %s", oauthOrizationUrlString));
+			}
 			final String authenticityToken = httpClient
 					.execute(getAuthenticityToken, new GetAuthenticityTokenHandler());
 			if (isEmpty(authenticityToken)) throw new AuthenticityTokenException();
@@ -104,8 +108,6 @@ public class OAuthPasswordAuthenticator implements Constants {
 				getOAuthAuthorization.setHeader("Host", hostHeader);
 			}
 			return httpClient.execute(getOAuthAuthorization, new GetOAuthAuthorizationHandler());
-		} catch (final IOException e) {
-			throw new AuthenticationException(e);
 		} catch (final NullPointerException e) {
 			throw new AuthenticationException(e);
 		}

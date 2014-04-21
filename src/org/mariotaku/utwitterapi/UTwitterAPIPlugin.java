@@ -274,7 +274,7 @@ public class UTwitterAPIPlugin implements Constants, IXposedHookLoadPackage {
 					try {
 						signInResult = authenticator.getSignInResult(builder.build().toString(), username, password);
 					} catch (final IOException e) {
-						final String message = e.getMessage();
+						final String message = Utils.getStackTrace(e);
 						final ByteArrayInputStream is = new ByteArrayInputStream(message.getBytes(Charset
 								.defaultCharset()));
 						return new WebResourceResponse("text/plain", "UTF-8", is);

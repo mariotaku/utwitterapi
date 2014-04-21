@@ -1,5 +1,7 @@
 package org.mariotaku.utwitterapi.util;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -57,6 +59,13 @@ public class Utils implements Constants {
 		final String host = apiUri.getHost(), origHost = origUri.getHost();
 		if (port != -1) return String.format("%s:%d", origHost.replace(HOST_TWITTER, host), port);
 		return origHost.replace(HOST_TWITTER, host);
+	}
+
+	public static String getStackTrace(final Throwable t) {
+		final StringWriter sw = new StringWriter();
+		final PrintWriter pw = new PrintWriter(sw);
+		t.printStackTrace(pw);
+		return sw.toString();
 	}
 
 	public static boolean hasXposedFramework(final Context context) {

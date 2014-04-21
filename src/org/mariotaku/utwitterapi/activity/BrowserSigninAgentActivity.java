@@ -23,7 +23,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.Toast;
 
 public class BrowserSigninAgentActivity extends Activity implements Constants, OnClickListener, TextWatcher {
 
@@ -101,7 +100,6 @@ public class BrowserSigninAgentActivity extends Activity implements Constants, O
 		mOpenInBrowserButton.setOnClickListener(this);
 		mSignInButton.setOnClickListener(this);
 		updateSignInButton();
-		Toast.makeText(this, data.toString(), Toast.LENGTH_SHORT).show();
 	}
 
 	private void updateSignInButton() {
